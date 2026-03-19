@@ -1,20 +1,17 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package]
-name = "matrix-commander"
+name = "matrix-commander-ng"
 version = "1.0.0"
 edition = "2021"
-description = "simple but convenient CLI-based Matrix client app for sending and receiving"
-documentation = "https://docs.rs/matrix-commander"
+description = "CLI-based Matrix client for sending, receiving, and more — maintained fork of matrix-commander-rs"
 readme = "README.md"
-homepage = "https://github.com/8go/matrix-commander-rs"
-repository = "https://github.com/8go/matrix-commander-rs/"
+homepage = "https://github.com/longregen/matrix-commander-ng"
+repository = "https://github.com/longregen/matrix-commander-ng"
 license = "GPL-3.0-or-later"
-# crates.io only allows 5 keywords
 keywords = ["Matrix", "cli", "command-line-tool", "tool", "messaging"]
 categories = ["command-line-utilities", "network-programming"]
 exclude = ["todo.txt", ".*"]
-publish = true
 
 
 [dependencies]
@@ -24,28 +21,25 @@ clap = { version = "4.5", features = [
     "wrap_help",
     "unicode",
 ] }
+chrono = "0.4"
 colored = "3.0"
 directories = "6.0"
 futures-util = "0.3"
-json = "0.12"
-matrix-sdk = { version = "0.7", features = [
+matrix-sdk = { version = "0.16", default-features = false, features = [
+    "e2e-encryption",
+    "automatic-room-key-forwarding",
     "markdown",
-    "anyhow",
     "bundled-sqlite",
+    "sso-login",
+    "rustls-tls",
 ] }
+matrix-sdk-base = "0.16"
 mime = "0.3"
 mime_guess = "2.0"
-#
-# create openssl dependency for cross compilation.
-# this removes dependencies on architecture specific openssl files.
-# see: https://stackoverflow.com/questions/54775076/how-to-cross-compile-a-rust-project-with-openssl
-# see: https://github.com/cross-rs/cross/issues/229
-# see: https://stackoverflow.com/questions/68871193/pkg-config-error-during-rust-cross-compilation
-openssl = { version = '0.10', features = ["vendored"] }
 regex = "1.11"
-reqwest = "0.12"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
 rpassword = "7.4"
-serde_json = "1.0"
+serde_json = { version = "1.0", features = ["preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "2.0"
 tokio = { version = "1.45", default-features = false, features = [
@@ -54,31 +48,30 @@ tokio = { version = "1.45", default-features = false, features = [
 ] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-update-informer = "1.2"
 url = { version = "2.5", features = ["serde"] }
+urlencoding = "2.1"
+emojis = "0.6"
 
 
 [dev-dependencies]
-# "matrix-commander-rs" will be the Rust program
 # to perform tests on async functions
 tokio-test = "0.4"
 
-# this is to distinguish it from "matrix-commander" which is the Python program
-# For people that have both Python and Rust installed:
-# "matrix-commander" will remain the Python program
 [[bin]]
-name = "matrix-commander-rs"
+name = "matrix-commander-ng"
 path = "src/main.rs"
-
-# https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section
-[badges]
-# The author wants to share it with the community but is not intending to meet anyone's particular use case.
-maintenance = { status = "experimental" }
 
 
 [profile.release]
 strip = "symbols"
 lto = true
+codegen-units = 1
+panic = "abort"
+
+# Fast CI builds: no optimizations, just compile and link
+[profile.ci]
+inherits = "dev"
+strip = "symbols"
 
 [profile.release-tiny]
 inherits = "release"

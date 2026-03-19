@@ -13,7 +13,7 @@ else
 fi
 
 # just in case PATH is not set correctly
-PATH="./target/debug/:./target/release/:../target/debug/:../target/release/:.:./matrix_commander-rs:../matrix_commander-rs:$PATH"
+PATH="./target/debug/:./target/release/:../target/debug/:../target/release/:.:./matrix_commander-ng:../matrix_commander-ng:$PATH"
 
 # One may set similar values in the terminal before calling the script.
 # export MCRS_OPTIONS="-d --room \!...some.room.id:matrix.example.org "
@@ -41,7 +41,7 @@ failures=0
 
 function test1() {
     echo "=== Test 1: send a message ==="
-    matrix-commander-rs -m foo $MCRS_OPTIONS
+    matrix-commander-ng -m foo $MCRS_OPTIONS
     res=$?
     if [ "$res" == "0" ]; then
         echo "SUCCESS"
@@ -53,7 +53,7 @@ function test1() {
 
 function test2() {
     echo "=== Test 2: send two messages ==="
-    matrix-commander-rs -m "foo" "bar" $MCRS_OPTIONS
+    matrix-commander-ng -m "foo" "bar" $MCRS_OPTIONS
     res=$?
     if [ "$res" == "0" ]; then
         echo "SUCCESS"
@@ -64,7 +64,7 @@ function test2() {
 }
 function test3() {
     echo "=== Test 3: send two messages ==="
-    res=$(matrix-commander-rs -m "foo" "bar" -d $MCRS_OPTIONS 2>&1 >/dev/null | grep "message send successful" | wc -l)
+    res=$(matrix-commander-ng -m "foo" "bar" -d $MCRS_OPTIONS 2>&1 >/dev/null | grep "message send successful" | wc -l)
     if [ "$res" == "2" ]; then
         echo "SUCCESS"
     else

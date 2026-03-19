@@ -1,4 +1,4 @@
-Usage: matrix-commander-rs [OPTIONS]
+Usage: matrix-commander-ng [OPTIONS]
 Options:
       --contribute
   -v, --version [<CHECK>]

@@ -15,7 +15,7 @@ type fzf >/dev/null 2>&1 || {
     exit 0
 }
 
-EXE=matrix-commander-rs
+EXE=matrix-commander-ng
 
 # Instruction on how to use fzf
 echo "Set env variables EDITOR and VISUAL to change the editor being used."

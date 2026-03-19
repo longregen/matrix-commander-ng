@@ -85,22 +85,22 @@ jobs:
           profile: minimal
 
       - name: Build
-        run: cargo build --profile release --bin matrix-commander-rs
+        run: cargo build --profile release --bin matrix-commander-ng
 
       - name: Gzip
         run: |
-          mkdir matrix-commander-rs
-          cp ./target/release/matrix-commander-rs matrix-commander-rs/
-          cp README.md matrix-commander-rs/
-          cp LICENSE matrix-commander-rs/
-          cp help.help.txt matrix-commander-rs/
-          cp help.manual.txt matrix-commander-rs/
-          cp help.usage.txt matrix-commander-rs/
-          tar -zcvf ./matrix-commander-rs_${TAG_NAME}_linux.tar.gz matrix-commander-rs
-          # tar -zcvf ./matrix-commander-rs_linux.tar.gz matrix-commander-rs
-          sha256sum ./matrix-commander-rs_${TAG_NAME}_linux.tar.gz > ./matrix-commander-rs_${TAG_NAME}_linux.tar.gz.sha256sum
+          mkdir matrix-commander-ng
+          cp ./target/release/matrix-commander-ng matrix-commander-ng/
+          cp README.md matrix-commander-ng/
+          cp LICENSE matrix-commander-ng/
+          cp help.help.txt matrix-commander-ng/
+          cp help.manual.txt matrix-commander-ng/
+          cp help.usage.txt matrix-commander-ng/
+          tar -zcvf ./matrix-commander-ng_${TAG_NAME}_linux.tar.gz matrix-commander-ng
+          # tar -zcvf ./matrix-commander-ng_linux.tar.gz matrix-commander-ng
+          sha256sum ./matrix-commander-ng_${TAG_NAME}_linux.tar.gz > ./matrix-commander-ng_${TAG_NAME}_linux.tar.gz.sha256sum
           echo "SHA256 checksum is: "
-          cat ./matrix-commander-rs_${TAG_NAME}_linux.tar.gz.sha256sum
+          cat ./matrix-commander-ng_${TAG_NAME}_linux.tar.gz.sha256sum
           ls
           ls -l
           echo ${TAG_NAME} > tag.txt
@@ -111,8 +111,8 @@ jobs:
         with:
           name: Binary
           path: |
-            ./matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz
-            ./matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz.sha256sum
+            ./matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz
+            ./matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz.sha256sum
           retention-days: 1
 
       #   this overwrites all files in the workspace, so files from before will be lost.
@@ -190,12 +190,12 @@ jobs:
           rename 's/_null_/_${{ env.RELEASE_TAG_NAME }}_/' output/*
           #cd output
           #ls
-          #mv matrix-commander-rs_null_x86_64-pc-windows-gnu.zip matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip 
-          #mv matrix-commander-rs_null_x86_64-pc-windows-gnu.zip.sha256sum matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip.sha256sum 
-          #mv matrix-commander-rs_null_x86_64-unknown-linux-musl.zip matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip 
-          #mv matrix-commander-rs_null_x86_64-unknown-linux-musl.zip.sha256sum matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip.sha256sum 
-          #mv matrix-commander-rs_null_x86_64-apple-darwin.zip matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip
-          #mv matrix-commander-rs_null_x86_64-apple-darwin.zip.sha256sum matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip.sha256sum 
+          #mv matrix-commander-ng_null_x86_64-pc-windows-gnu.zip matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip 
+          #mv matrix-commander-ng_null_x86_64-pc-windows-gnu.zip.sha256sum matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip.sha256sum 
+          #mv matrix-commander-ng_null_x86_64-unknown-linux-musl.zip matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip 
+          #mv matrix-commander-ng_null_x86_64-unknown-linux-musl.zip.sha256sum matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip.sha256sum 
+          #mv matrix-commander-ng_null_x86_64-apple-darwin.zip matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip
+          #mv matrix-commander-ng_null_x86_64-apple-darwin.zip.sha256sum matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip.sha256sum 
           #cd ..
           ls * output/*
 
@@ -210,14 +210,14 @@ jobs:
           files: |
             README.md
             LICENSE
-            matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz.sha256sum
-            matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz
-            output/matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip
-            output/matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip.sha256sum 
-            output/matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip 
-            output/matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip.sha256sum 
-            output/matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip
-            output/matrix-commander-rs_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip.sha256sum 
+            matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz.sha256sum
+            matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_linux.tar.gz
+            output/matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip
+            output/matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-pc-windows-gnu.zip.sha256sum 
+            output/matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip 
+            output/matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-unknown-linux-musl.zip.sha256sum 
+            output/matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip
+            output/matrix-commander-ng_${{ env.RELEASE_TAG_NAME }}_x86_64-apple-darwin.zip.sha256sum 
             hel*.txt
 
 # ${{ steps.compile.outputs.BUILT_ARCHIVE }}

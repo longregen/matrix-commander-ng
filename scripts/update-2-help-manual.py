@@ -94,8 +94,8 @@ with open(filename, "r+") as f:
     )
 
     text = re.sub(
-        r"target/debug/matrix-commander-rs",
-        "matrix-commander-rs",
+        r"target/debug/matrix-commander-ng",
+        "matrix-commander-ng",
         text,
     )
 

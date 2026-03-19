@@ -13,7 +13,7 @@ else
 fi
 
 # just in case PATH is not set correctly
-PATH="./target/debug/:./target/release/:../target/debug/:../target/release/:.:./matrix_commander-rs:../matrix_commander-rs:$PATH"
+PATH="./target/debug/:./target/release/:../target/debug/:../target/release/:.:./matrix_commander-ng:../matrix_commander-ng:$PATH"
 
 # One may set similar values in the terminal before calling the script.
 # export MCRS_OPTIONS="-d --room \!...some.room.id:matrix.example.org "
@@ -41,7 +41,7 @@ failures=0
 
 function test1() {
     echo "=== Test 1: get version in text format ==="
-    matrix-commander-rs --version $MCRS_OPTIONS
+    matrix-commander-ng --version $MCRS_OPTIONS
     res=$?
     if [ "$res" == "0" ]; then
         echo "SUCCESS"
@@ -54,7 +54,7 @@ function test1() {
 function test2() {
     echo "=== Test 2: get version in JSON format ==="
     fofile="/tmp/matrix-comander-rs-test-version.json"
-    matrix-commander-rs --version --output json $MCRS_OPTIONS >$fofile
+    matrix-commander-ng --version --output json $MCRS_OPTIONS >$fofile
     res=$?
     if [ "$res" == "0" ]; then
         if cat $fofile | jq -e . >/dev/null 2>&1; then

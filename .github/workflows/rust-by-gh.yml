@@ -44,8 +44,8 @@ jobs:
           cargo build --release
           ls -l target target/*
           find . -name "matrix*commander*"
-          mv ./target/*/matrix-commander-rs matrix-commander-rs.$CCARCH
-          ls -l ./matrix-commander-rs*
+          mv ./target/*/matrix-commander-ng matrix-commander-ng.$CCARCH
+          ls -l ./matrix-commander-ng*
           cargo clean
           # now cross compile
           sudo apt-get install podman
@@ -54,16 +54,16 @@ jobs:
           cross build --target $CCARCH --release
           ls -l target target/*
           find . -name "matrix*commander*"
-          mv ./target/$CCARCH/*/matrix-commander-rs matrix-commander-rs.$CCARCH
-          ls -l ./matrix-commander-rs*
+          mv ./target/$CCARCH/*/matrix-commander-ng matrix-commander-ng.$CCARCH
+          ls -l ./matrix-commander-ng*
           cargo clean
           # now cross compile
           CCARCH=armv7-linux-androideabi
           cross build --target $CCARCH --release
           ls -l target target/*
           find . -name "matrix*commander*"
-          mv ./target/$CCARCH/*/matrix-commander-rs matrix-commander-rs.$CCARCH
-          ls -l ./matrix-commander-rs*
+          mv ./target/$CCARCH/*/matrix-commander-ng matrix-commander-ng.$CCARCH
+          ls -l ./matrix-commander-ng*
           cargo clean
           # cannot build for aarch64-apple-darwin
           # [cross] warning: `cross` does not provide a Docker image for target aarch64-apple-darwin, specify a custom image in `Cross.toml`.
@@ -77,7 +77,7 @@ jobs:
     #   with:
     #     name: plain-linux
     #     path: |
-    #         ./matrix-commander-rs*
+    #         ./matrix-commander-ng*
     #     retention-days: 1
 
     # https://github.com/softprops/action-gh-release
@@ -89,4 +89,4 @@ jobs:
         prerelease: false
         generate_release_notes: true
         files: |
-            ./matrix-commander-rs*
+            ./matrix-commander-ng*

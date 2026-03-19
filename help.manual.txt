@@ -1,17 +1,13 @@
-Welcome to "matrix-commander-rs", a Matrix CLI client. ─── On the first run use
+Welcome to "matrix-commander-ng", a Matrix CLI client. ─── On the first run use
 --login to log in, to authenticate. On the second run we suggest to use
 --verify to get verified. Manual verification is built-in and can be used to
 verify devices and users. Or combine both --login and --verify in the first
-run. On further runs "matrix-commander-rs" implements a simple Matrix CLI
+run. On further runs "matrix-commander-ng" implements a simple Matrix CLI
 client that can send messages or files, listen to messages, operate on rooms,
-etc.  ───  ─── This project is currently only a vision. The Python package
-"matrix-commander" exists. The vision is to have a compatible program in Rust.
-I cannot do it myself, but I can coordinate and merge your pull requests. Have
-a look at the repo "https://github.com/8go/matrix-commander-rs/". Please help!
-Please contribute code to make this vision a reality, and to one day have a
-feature-rich "matrix-commander-rs" crate. Safe!
+etc.  ───  ─── Maintained fork of matrix-commander-rs by 8go.
+See https://github.com/longregen/matrix-commander-ng
 
-Usage: matrix-commander-rs [OPTIONS]
+Usage: matrix-commander-ng [OPTIONS]
 
 Options:
       --contribute
@@ -64,16 +60,16 @@ Options:
           Set the log level by overwriting the default log level. Details:: If
           not used, then the default log level set with environment variable
           'RUST_LOG' will be used. If used with one value specified this value
-          is assigned to the log level of matrix-commander-rs. If used with two
+          is assigned to the log level of matrix-commander-ng. If used with two
           values specified the first value is assigned to the log level of
-          matrix-commander-rs. The second value is asigned to the lower level
+          matrix-commander-ng. The second value is asigned to the lower level
           modules. More than two values should not be specified. --debug
           overwrites -log-level. See also '--debug' and '--verbose'.
           Alternatively you can use the RUST_LOG environment variable. An
           example use of RUST_LOG is to use neither --log-level nor --debug,
-          and to set RUST_LOG="error,matrix_commander_rs=debug" which turns off
+          and to set RUST_LOG="error,matrix_commander_ng=debug" which turns off
           debugging on all lower level modules and turns debugging on only for
-          matrix-commander-rs
+          matrix-commander-ng
 
           Possible values:
           - none:  None: not set, default
@@ -110,10 +106,10 @@ Options:
           permit logging into the correct Matrix account and sending messages
           to the preconfigured room. If this option is provided, the provided
           path to a file will be used as credentials file instead of the
-          default one. E.g. ~/.local/share/matrix-commander-rs/credentials.json
+          default one. E.g. ~/.local/share/matrix-commander-ng/credentials.json
           
           [default:
-          /home/user/.local/share/matrix-commander-rs/credentials.json]
+          /home/user/.local/share/matrix-commander-ng/credentials.json]
 
   -s, --store <PATH_TO_DIRECTORY>
           Specify a path to a directory to be used as "store" for encrypted
@@ -124,7 +120,7 @@ Options:
           the same store for the same device. The store directory can be shared
           between multiple different devices and users
           
-          [default: /home/user/.local/share/matrix-commander-rs/store/]
+          [default: /home/user/.local/share/matrix-commander-ng/store/]
 
       --login <LOGIN_METHOD>
           Login to and authenticate with the Matrix homeserver. Details:: This
@@ -199,15 +195,15 @@ Options:
           menus or GUI elements. Sometimes it is labelled "Not trusted",
           sometimes "Verify" or "Verify by emoji", sometimes "Verify With Other
           Device". Verification is best done as follows: Run
-          'matrix-commander-rs --verify emoji ...' and have the program waiting
+          'matrix-commander-ng --verify emoji ...' and have the program waiting
           for inputs and for invitations. Find the appropriate "verify" button
           on your other client, click it, and thereby publish a "verification
-          invitation". Once received by "matrix-commander-rs" it will print the
+          invitation". Once received by "matrix-commander-ng" it will print the
           emojis in the terminal. At this point both your client as well as
-          "matrix-commander-rs" in the terminal show a set of emoji icons and
+          "matrix-commander-ng" in the terminal show a set of emoji icons and
           names. Compare them visually. Confirm on both sides (Yes, They Match,
           Got it), finally click OK. You should see a green shield and also see
-          that the matrix-commander-rs device is now green and verified. In the
+          that the matrix-commander-ng device is now green and verified. In the
           terminal you should see a text message indicating success. It has
           been tested with Element app on cell phone and Element webpage in
           browser. Verification is done one device at a time. 'emoji-req' is
@@ -242,16 +238,16 @@ Options:
           Logout this or all devices from the Matrix homeserver. Details:: This
           requires exactly one argument. Two choices are offered: 'me' and
           'all'. Provide one of these choices. If you choose 'me', only the one
-          device "matrix-commander-rs" is currently using will be logged out.
+          device "matrix-commander-ng" is currently using will be logged out.
           If you choose 'all', all devices of the user used by
-          "matrix-commander-rs" will be logged out. Using '--logout all' is
+          "matrix-commander-ng" will be logged out. Using '--logout all' is
           equivalent to '--delete-device "*" --logout "me"' and requires a
           password (see --delete-device). --logout not only logs the user out
           from the homeserver thereby invalidates the access token, it also
           removes both the 'credentials' file as well as the 'store' directory.
           After a --logout, one must perform a new --login to use
-          "matrix-commander-rs" again. You can perfectly use
-          "matrix-commander-rs" without ever logging out. --logout is a cleanup
+          "matrix-commander-ng" again. You can perfectly use
+          "matrix-commander-ng" without ever logging out. --logout is a cleanup
           if you have decided not to use this (or all) device(s) ever again
           
           [default: none]
@@ -384,7 +380,7 @@ Options:
   -f, --file [<FILE>...]
           Send one or multiple files (e.g. PDF, DOC, MP4). Details:: First
           files are sent, then text messages are sent. If you want to feed a
-          file into "matrix-commander-rs" via a pipe, via stdin, then specify
+          file into "matrix-commander-ng" via a pipe, via stdin, then specify
           the special character '-' as stdin indicator. See description of
           '--message' to see how the stdin indicator '-' is handled. If you
           pipe a file into stdin, you can optionally use '--file-name' to
@@ -486,7 +482,7 @@ Options:
 
       --whoami
           Print your user name. Details:: Print the user id used by
-          "matrix-commander-rs" (itself). One can get this information also by
+          "matrix-commander-ng" (itself). One can get this information also by
           looking at the credentials file
 
   -o, --output <OUTPUT_FORMAT>
@@ -608,7 +604,7 @@ Options:
           Specify the user(s) as arguments to --user. Specify the rooms as
           arguments to this option, i.e. as arguments to --room-invite. The
           user must have permissions to invite users. Use the shortcut '-' to
-          specify the pre-configured default room of 'matrix-commander-rs' as
+          specify the pre-configured default room of 'matrix-commander-ng' as
           room
 
       --room-join [<ROOM>...]
@@ -616,22 +612,22 @@ Options:
           can be specified. The room (or multiple ones) provided in the
           arguments will be joined. The user must have permissions to join
           these rooms. Use the shortcut '-' to specify the pre-configured
-          default room of 'matrix-commander-rs' as room. Note, no --user on
-          this feature as the user is always the user of 'matrix-commander-rs'
+          default room of 'matrix-commander-ng' as room. Note, no --user on
+          this feature as the user is always the user of 'matrix-commander-ng'
 
       --room-ban [<ROOM>...]
           Ban one ore more users from one or more rooms. Details:: Specify the
           user(s) as arguments to --user. Specify the rooms as arguments to
           this option, i.e. as arguments to --room-ban. The user must have
           permissions to ban users. Use the shortcut '-' to specify the
-          pre-configured default room of 'matrix-commander-rs' as room
+          pre-configured default room of 'matrix-commander-ng' as room
 
       --room-unban [<ROOM>...]
           Unban one ore more users from one or more rooms. Details:: Specify
           the user(s) as arguments to --user. Specify the rooms as arguments to
           this option, i.e. as arguments to --room-unban. The user must have
           permissions to unban users. Use the shortcut '-' to specify the
-          pre-configured default room of 'matrix-commander-rs' as room. Note,
+          pre-configured default room of 'matrix-commander-ng' as room. Note,
           this is currently not implemented in the matrix-sdk API. This feature
           will currently return an error
 
@@ -640,7 +636,7 @@ Options:
           user(s) as arguments to --user. Specify the rooms as arguments to
           this option, i.e. as arguments to --room-kick. The user must have
           permissions to kick users. Use the shortcut '-' to specify the
-          pre-configured default room of 'matrix-commander-rs' as room
+          pre-configured default room of 'matrix-commander-ng' as room
 
       --room-resolve-alias [<ALIAS>...]
           Resolves room aliases to room ids. Details:: Resolves a room alias to
@@ -649,7 +645,7 @@ Options:
           alias looks like this: '#someRoomAlias:matrix.example.org'. Short
           aliases like 'someRoomAlias' or '#someRoomAlias' are also accepted.
           In case of a short alias, it will be automatically prefixed with '#'
-          and the homeserver from the default room of matrix-commander-rs (as
+          and the homeserver from the default room of matrix-commander-ng (as
           found in credentials file) will be automatically appended. Resolving
           an alias that does not exist results in an error. For each room alias
           one line will be printed to stdout with the result. It also prints
@@ -708,18 +704,18 @@ Options:
       --room-get-visibility [<ROOM>...]
           Get the visibility of one or more rooms. Details:: Provide one or
           more room ids as arguments. If the shortcut '-' is used, then the
-          default room of 'matrix-commander-rs' (as found in credentials file)
+          default room of 'matrix-commander-ng' (as found in credentials file)
           will be used. The shortcut '*' represents all the rooms of the user
-          of 'matrix-commander-rs'. For each room the visibility will be
+          of 'matrix-commander-ng'. For each room the visibility will be
           printed. Currently, this is either the string 'private' or 'public'.
           As response one line per room will be printed
 
       --room-get-state [<ROOM>...]
           Get the state of one or more rooms. Details:: Provide one or more
           room ids as arguments. If the shortcut '-' is used, then the default
-          room of 'matrix-commander-rs' (as found in credentials file) will be
+          room of 'matrix-commander-ng' (as found in credentials file) will be
           used. The shortcut '*' represents all the rooms of the user of
-          'matrix-commander-rs'. For each room part of the state will be
+          'matrix-commander-ng'. For each room part of the state will be
           printed. The state is a long list of events. As response one line per
           room will be printed to stdout. The line can be very long as the list
           of events can be very large. To get output into a human readable form
@@ -733,13 +729,13 @@ Options:
 
       --delete-device [<DEVICE>...]
           Delete one or multiple devices. Details:: By default devices
-          belonging to itself, i.e. belonging to "matrix-commander-rs", will be
+          belonging to itself, i.e. belonging to "matrix-commander-ng", will be
           deleted. If you want to delete the one device currently used for the
-          connection, i.e. the device used by "matrix-commander-rs", then
+          connection, i.e. the device used by "matrix-commander-ng", then
           instead of the full device id you can just specify the shortcut 'me'
           such as '--delete-device me --password mypassword'. If you want to
           delete all devices of yourself, i.e. all devices owned by the user
-          that "matrix-commander-rs" is using you can specify that with the
+          that "matrix-commander-ng" is using you can specify that with the
           shortcut '*'. Most shells require you to escape it or to quote it,
           ie. use '--delete-device "*" --password mypassword'. Removing your
           own device (e.g. 'me') or all devices (e.g. '*') will require you to
@@ -764,16 +760,16 @@ Options:
           this option --user specifies the users to be used with room commands
           (like invite, ban, For d) this gives the option to delete the device
           of a different user. If --user is not set, it will default to itself,
-          i.e. the user of the "matrix-commander-rs" account
+          i.e. the user of the "matrix-commander-ng" account
 
       --get-avatar <FILE>
           Get your own avatar. Details:: Get the avatar of itself, i.e. the
-          'matrix-commander-rs' user account. Spefify a file optionally with
+          'matrix-commander-ng' user account. Spefify a file optionally with
           path to store the image. E.g. --get-avatar "./avatar.png"
 
       --set-avatar <FILE>
           Set your own avatar. Details:: Set, i.e. upload, an image to be used
-          as avatar for 'matrix-commander-rs' user account. Spefify a file
+          as avatar for 'matrix-commander-ng' user account. Spefify a file
           optionally with path with the image. If the MIME type of the image
           cannot be determined, it will assume 'PNG' as default. E.g.
           --set-avatar "./avatar.jpg". It returns a line with the MRX URI of
@@ -781,36 +777,36 @@ Options:
 
       --get-avatar-url
           Get your own avatar URL. Details:: Get the MXC URI of the avatar of
-          itself, i.e. the 'matrix-commander-rs' user account
+          itself, i.e. the 'matrix-commander-ng' user account
 
       --set-avatar-url <MAX_URI>
           Set your own avatar URL. Details:: Set the avatar MXC URI of the URL
-          to be used as avatar for the 'matrix-commander-rs' user account.
+          to be used as avatar for the 'matrix-commander-ng' user account.
           Spefify a MXC URI. E.g. --set-avatar-url
           "mxc://matrix.server.org/SomeStrangeStringOfYourMxcUri"
 
       --unset-avatar-url
           Remove your own avatar URL. Details:: Remove the avatar MXC URI to be
-          used as avatar for the 'matrix-commander-rs' user account. In other
-          words, remove the avatar of the 'matrix-commander-rs' user
+          used as avatar for the 'matrix-commander-ng' user account. In other
+          words, remove the avatar of the 'matrix-commander-ng' user
 
       --get-display-name
           Get your own display name. Details:: Get the display name of itself,
-          i.e. of the 'matrix-commander-rs' user account
+          i.e. of the 'matrix-commander-ng' user account
 
       --set-display-name <NAME>
           Set your own display name. Details:: Set the display name of the
-          'matrix-commander-rs' user account. Spefify a name
+          'matrix-commander-ng' user account. Spefify a name
 
       --get-profile
           Get your own profile. Details:: Get the profile of itself, i.e. of
-          the 'matrix-commander-rs' user account. This is getting both display
+          the 'matrix-commander-ng' user account. This is getting both display
           name and avatar MXC URI in a call
 
       --media-upload [<FILE>...]
           Upload one or multiple files (e.g. PDF, DOC, MP4) to the homeserver
           content repository. Details:: If you want to feed a file for upload
-          into "matrix-commander-rs" via a pipe, via stdin, then specify the
+          into "matrix-commander-ng" via a pipe, via stdin, then specify the
           special character '-' as stdin indicator. See description of
           '--message' to see how the stdin indicator '-' is handled. Use --mime
           to optionally specify the MIME type of the file. If you give N
@@ -843,7 +839,7 @@ Options:
       --mime [<MIME_TYPE>...]
           Specify the Mime type of certain input files. Details:: Specify '' if
           the Mime type should be guessed based on the filename. If input is
-          from stdin (i.e. '-' and piped into 'matrix-commander-rs') then Mime
+          from stdin (i.e. '-' and piped into 'matrix-commander-ng') then Mime
           type cannot be guessed. If not specified, and no filename available
           for guessing it will default to 'application/octet-stream'. Some
           example mime types are: 'image/jpeg', 'image/png', 'image/gif',
@@ -874,8 +870,8 @@ Options:
 
       --get-masterkey
           Get your own master key. Details:: Get the master key of itself, i.e.
-          of the 'matrix-commander-rs' user account. Keep this key private and
+          of the 'matrix-commander-ng' user account. Keep this key private and
           safe
 
-PS: Also have a look at scripts/matrix-commander-rs-tui.
+PS: Also have a look at scripts/matrix-commander-ng-tui.
 
