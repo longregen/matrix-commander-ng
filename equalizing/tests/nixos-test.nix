@@ -48,16 +48,21 @@ let
     pass() { echo "PASS: $1"; }
     skip() { echo "SKIP: $1"; }
 
-    # Save command output to a file.
+    # Save command output to a file (stdout, stderr, and command line).
     # Usage: capture <name> <format> <mc-args...>
     # format: "text" or "json" (appends --output json)
     capture() {
       local name="$1" fmt="$2"; shift 2
       local outfile="$HOME/outputs/$name-$fmt.out"
+      local errfile="$HOME/outputs/$name-$fmt.err"
+      local cmdfile="$HOME/outputs/$name-$fmt.cmd"
+      local rcfile="$HOME/outputs/$name-$fmt.rc"
       if [ "$fmt" = "json" ]; then
-        $MC "$@" --output json 2>/dev/null > "$outfile" || true
+        echo "$MC $* --output json" > "$cmdfile"
+        $MC "$@" --output json >"$outfile" 2>"$errfile" && echo 0 > "$rcfile" || echo $? > "$rcfile"
       else
-        $MC "$@" 2>/dev/null > "$outfile" || true
+        echo "$MC $*" > "$cmdfile"
+        $MC "$@" >"$outfile" 2>"$errfile" && echo 0 > "$rcfile" || echo $? > "$rcfile"
       fi
     }
 
@@ -207,8 +212,11 @@ json.dump(c, open('credentials.json', 'w'))
       skip "send emote (Python --emote exits non-zero)"
     fi
 
-    PEID_OUT=$($MC --room "$ROOM_ID" -m "print-event-id-test" --print-event-id 2>/dev/null) || true
-    echo "$PEID_OUT" > "$HOME/outputs/print-event-id.out"
+    echo "$MC --room \$ROOM_ID -m print-event-id-test --print-event-id" > "$HOME/outputs/print-event-id.cmd"
+    $MC --room "$ROOM_ID" -m "print-event-id-test" --print-event-id \
+      >"$HOME/outputs/print-event-id.out" 2>"$HOME/outputs/print-event-id.err" \
+      && echo 0 > "$HOME/outputs/print-event-id.rc" || echo $? > "$HOME/outputs/print-event-id.rc"
+    PEID_OUT=$(cat "$HOME/outputs/print-event-id.out")
     if [ -n "$PEID_OUT" ]; then
       pass "send with print-event-id"
     else
@@ -278,10 +286,14 @@ json.dump(c, open('credentials.json', 'w'))
     capture media-upload json --media-upload "$HOME/test-upload.txt"
 
     # -- listen tail (text + json) --
+    echo "$MC --listen tail --tail 10 --room \$ROOM_ID" > "$HOME/outputs/listen-text.cmd"
     timeout 30 $MC --listen tail --tail 10 --room "$ROOM_ID" \
-      2>/dev/null > "$HOME/outputs/listen-text.out" || true
+      >"$HOME/outputs/listen-text.out" 2>"$HOME/outputs/listen-text.err" \
+      && echo 0 > "$HOME/outputs/listen-text.rc" || echo $? > "$HOME/outputs/listen-text.rc"
+    echo "$MC --listen tail --tail 10 --room \$ROOM_ID --output json" > "$HOME/outputs/listen-json.cmd"
     timeout 30 $MC --listen tail --tail 10 --room "$ROOM_ID" --output json \
-      2>/dev/null > "$HOME/outputs/listen-json.out" || true
+      >"$HOME/outputs/listen-json.out" 2>"$HOME/outputs/listen-json.err" \
+      && echo 0 > "$HOME/outputs/listen-json.rc" || echo $? > "$HOME/outputs/listen-json.rc"
 
     cd "$HOME"
 
@@ -314,10 +326,15 @@ json.dump(c, open('credentials.json', 'w'))
     capture() {
       local name="$1" fmt="$2"; shift 2
       local outfile="$HOME/outputs/$name-$fmt.out"
+      local errfile="$HOME/outputs/$name-$fmt.err"
+      local cmdfile="$HOME/outputs/$name-$fmt.cmd"
+      local rcfile="$HOME/outputs/$name-$fmt.rc"
       if [ "$fmt" = "json" ]; then
-        $MC --credentials ./credentials.json --store ./store/ "$@" --output json 2>/dev/null > "$outfile" || true
+        echo "$MC $* --output json" > "$cmdfile"
+        $MC --credentials ./credentials.json --store ./store/ "$@" --output json >"$outfile" 2>"$errfile" && echo 0 > "$rcfile" || echo $? > "$rcfile"
       else
-        $MC --credentials ./credentials.json --store ./store/ "$@" 2>/dev/null > "$outfile" || true
+        echo "$MC $*" > "$cmdfile"
+        $MC --credentials ./credentials.json --store ./store/ "$@" >"$outfile" 2>"$errfile" && echo 0 > "$rcfile" || echo $? > "$rcfile"
       fi
     }
 
@@ -481,9 +498,12 @@ json.dump(c, open('credentials.json', 'w'))
       fail "send emote"
     fi
 
-    PEID_OUT=$($MC --credentials ./credentials.json --store ./store/ \
-      --room "$ROOM_ID" -m "print-event-id-test" --print-event-id 2>/dev/null) || true
-    echo "$PEID_OUT" > "$HOME/outputs/print-event-id.out"
+    echo "$MC --credentials ./credentials.json --store ./store/ --room \$ROOM_ID -m print-event-id-test --print-event-id" > "$HOME/outputs/print-event-id.cmd"
+    $MC --credentials ./credentials.json --store ./store/ \
+      --room "$ROOM_ID" -m "print-event-id-test" --print-event-id \
+      >"$HOME/outputs/print-event-id.out" 2>"$HOME/outputs/print-event-id.err" \
+      && echo 0 > "$HOME/outputs/print-event-id.rc" || echo $? > "$HOME/outputs/print-event-id.rc"
+    PEID_OUT=$(cat "$HOME/outputs/print-event-id.out")
     if [ -n "$PEID_OUT" ]; then
       pass "send with print-event-id"
     else
@@ -539,12 +559,16 @@ json.dump(c, open('credentials.json', 'w'))
     capture media-upload json --media-upload "$HOME/test-upload.txt"
 
     # listen tail (text + json)
+    echo "$MC --listen tail --tail 10 --room \$ROOM_ID --credentials ./credentials.json --store ./store/" > "$HOME/outputs/listen-text.cmd"
     timeout 30 $MC --listen tail --tail 10 --room "$ROOM_ID" \
       --credentials ./credentials.json --store ./store/ \
-      2>/dev/null > "$HOME/outputs/listen-text.out" || true
+      >"$HOME/outputs/listen-text.out" 2>"$HOME/outputs/listen-text.err" \
+      && echo 0 > "$HOME/outputs/listen-text.rc" || echo $? > "$HOME/outputs/listen-text.rc"
+    echo "$MC --listen tail --tail 10 --room \$ROOM_ID --output json --credentials ./credentials.json --store ./store/" > "$HOME/outputs/listen-json.cmd"
     timeout 30 $MC --listen tail --tail 10 --room "$ROOM_ID" --output json \
       --credentials ./credentials.json --store ./store/ \
-      2>/dev/null > "$HOME/outputs/listen-json.out" || true
+      >"$HOME/outputs/listen-json.out" 2>"$HOME/outputs/listen-json.err" \
+      && echo 0 > "$HOME/outputs/listen-json.rc" || echo $? > "$HOME/outputs/listen-json.rc"
 
     cd "$HOME"
 
@@ -624,6 +648,7 @@ pkgs.testers.nixosTest {
     import json
     import os
     import pathlib
+    import re
 
     server.start()
     server.wait_for_unit("matrix-synapse.service")
@@ -660,19 +685,77 @@ pkgs.testers.nixosTest {
             raise Exception(f"matrix-commander-ng tests failed with exit code {result[0]}")
 
     # ================================================================
+    # COLLECT PER-COMMAND COMPARISON DATA
+    # ================================================================
+    py_dir = "/tmp/mc-py-test/outputs"
+    rs_dir = "/tmp/mc-rs-test/outputs"
+
+    def read_output(path):
+        """Read a file from the VM, return stripped content or empty string."""
+        return server.succeed(f"cat {path} 2>/dev/null || true").strip()
+
+    with subtest("collect comparison data"):
+        out_dir = pathlib.Path(os.environ.get("out", "/tmp/eq-test-out"))
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        # Read room IDs from credentials so we can normalize them
+        try:
+            py_creds = json.loads(read_output("/tmp/mc-py-test/alice-deviceA/credentials.json"))
+            rs_creds = json.loads(read_output("/tmp/mc-rs-test/alice-deviceA/credentials.json"))
+            py_room_id = py_creds.get("room_id", "")
+            rs_room_id = rs_creds.get("room_id", "")
+        except json.JSONDecodeError:
+            py_room_id = ""
+            rs_room_id = ""
+
+        def normalize(text, side):
+            """Normalize dynamic values so Python and Rust outputs are comparable."""
+            # Replace this side's primary room ID with a placeholder
+            room_id = py_room_id if side == "py" else rs_room_id
+            if room_id:
+                text = text.replace(room_id, "!ROOM:localhost")
+            # Normalize room aliases: #test-room-{py,rs} -> #test-room
+            text = re.sub(r'#test-room-(?:py|rs)', '#test-room', text)
+            text = re.sub(r'#test-json-room-(?:py|rs)', '#test-json-room', text)
+            # Normalize remaining room IDs (secondary rooms)
+            text = re.sub(r'![A-Za-z0-9]{10,}:localhost', '!ROOM:localhost', text)
+            return text
+
+        # Discover all captured commands from .out files on both sides
+        py_outs = server.succeed(f"ls {py_dir}/*.out 2>/dev/null || true").strip()
+        rs_outs = server.succeed(f"ls {rs_dir}/*.out 2>/dev/null || true").strip()
+        all_ids = set()
+        for line in (py_outs + "\n" + rs_outs).split("\n"):
+            line = line.strip()
+            if line and line.endswith(".out"):
+                name = line.split("/")[-1].removesuffix(".out")
+                all_ids.add(name)
+
+        comparison = []
+        for cid in sorted(all_ids):
+            comparison.append({
+                "id": cid,
+                "command_py": read_output(f"{py_dir}/{cid}.cmd"),
+                "command_rs": read_output(f"{rs_dir}/{cid}.cmd"),
+                "py_stdout": normalize(read_output(f"{py_dir}/{cid}.out"), "py"),
+                "rs_stdout": normalize(read_output(f"{rs_dir}/{cid}.out"), "rs"),
+                "py_stderr": read_output(f"{py_dir}/{cid}.err"),
+                "rs_stderr": read_output(f"{rs_dir}/{cid}.err"),
+                "py_rc": read_output(f"{py_dir}/{cid}.rc"),
+                "rs_rc": read_output(f"{rs_dir}/{cid}.rc"),
+            })
+
+        with open(out_dir / "comparison.json", "w") as f:
+            json.dump(comparison, f, indent=2)
+        print(f"  Wrote {len(comparison)} command comparisons to {out_dir / 'comparison.json'}")
+
+    # ================================================================
     # COMPREHENSIVE OUTPUT PARITY COMPARISON
     # ================================================================
     with subtest("comprehensive output parity"):
-        py_dir = "/tmp/mc-py-test/outputs"
-        rs_dir = "/tmp/mc-rs-test/outputs"
-
         counts = {"pass": 0, "fail": 0, "skip": 0}
         parity_checks = []
         state = {"section": "", "py_sample": "", "rs_sample": ""}
-
-        def read_output(path):
-            """Read a file from the VM, return stripped content or empty string."""
-            return server.succeed(f"cat {path} 2>/dev/null || true").strip()
 
         def parse_jsonl(raw):
             """Parse newline-delimited JSON into a list of objects."""
@@ -698,8 +781,8 @@ pkgs.testers.nixosTest {
                 "label": label,
                 "status": status,
                 "detail": detail,
-                "py_sample": state["py_sample"][:500],
-                "rs_sample": state["rs_sample"][:500],
+                "py_sample": state["py_sample"],
+                "rs_sample": state["rs_sample"],
             })
 
         def parity_ok(label, detail=""): _record("pass", label, detail)
@@ -1205,8 +1288,8 @@ pkgs.testers.nixosTest {
         print("  5. FILE TREES (informational)")
         print("=" * 60)
 
-        py_tree = server.succeed("find /tmp/mc-py-test -type f -not -path '*/store/*' -not -path '*/nio_store/*' 2>/dev/null | sort | head -30")
-        rs_tree = server.succeed("find /tmp/mc-rs-test -type f -not -path '*/store/*' 2>/dev/null | sort | head -30")
+        py_tree = server.succeed("find /tmp/mc-py-test -type f -not -path '*/store/*' -not -path '*/nio_store/*' 2>/dev/null | sort")
+        rs_tree = server.succeed("find /tmp/mc-rs-test -type f -not -path '*/store/*' 2>/dev/null | sort")
         print(f"  Python files:\n{py_tree}")
         print(f"  Rust files:\n{rs_tree}")
 
@@ -1220,8 +1303,6 @@ pkgs.testers.nixosTest {
         print("=" * 60)
 
         # Write structured parity results to $out/
-        out_dir = os.environ.get("out", "/tmp/eq-test-out")
-        pathlib.Path(out_dir).mkdir(parents=True, exist_ok=True)
         parity_summary = {
             "total": total,
             "pass": counts["pass"],
@@ -1229,7 +1310,7 @@ pkgs.testers.nixosTest {
             "skip": counts["skip"],
             "checks": parity_checks,
         }
-        parity_path = pathlib.Path(out_dir) / "parity-summary.json"
+        parity_path = out_dir / "parity-summary.json"
         with open(parity_path, "w") as f:
             json.dump(parity_summary, f, indent=2)
         print(f"  Wrote parity summary to {parity_path}")

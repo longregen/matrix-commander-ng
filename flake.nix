@@ -96,42 +96,22 @@
             matrix-commander-ng-local = matrix-commander-ng-ci;
           };
 
-          asciinema-player-js = pkgs.fetchurl {
-            url = "https://cdn.jsdelivr.net/npm/asciinema-player@3.8.2/dist/bundle/asciinema-player.min.js";
-            hash = "sha256-pP2gDnMRtEcVUKbDUj/hJxckzpnR/hMzVquoQe3YQQo=";
-          };
-          asciinema-player-css = pkgs.fetchurl {
-            url = "https://cdn.jsdelivr.net/npm/asciinema-player@3.8.2/dist/bundle/asciinema-player.css";
-            hash = "sha256-TDt7jlHg1sQyaROYd6ExG98Xk/p1M9ZpGLYyQ/QlVKY=";
-          };
-          fontsConf = pkgs.makeFontsConf {
-            fontDirectories = [ pkgs.jetbrains-mono ];
-          };
         in {
           pages-site = pkgs.stdenvNoCC.mkDerivation {
             name = "matrix-commander-ng-pages-site";
             dontUnpack = true;
-            nativeBuildInputs = [ pkgs.python3 pkgs.asciinema-agg ];
-            FONTCONFIG_FILE = fontsConf;
+            nativeBuildInputs = [ pkgs.python3 ];
 
             buildPhase = ''
-              python3 ${./scripts/log-to-cast.py} ${integration-test}/test.log test-results.cast
-              agg test-results.cast test-results.gif \
-                --cols 120 --rows 40 \
-                --font-size 14 \
-                --speed 0.6 \
-                --idle-time-limit 2
               mkdir -p $out
-              cp test-results.cast test-results.gif $out/
-              cp ${integration-test}/test-summary.json $out/
+              cp ${equalization-test}/comparison.json $out/
               cp ${equalization-test}/parity-summary.json $out/
+              cp ${integration-test}/test-summary.json $out/
               cp ${./logos/matrix-commander-ng.svg} $out/logo.svg
-              cp ${asciinema-player-js} $out/asciinema-player.min.js
-              cp ${asciinema-player-css} $out/asciinema-player.css
               python3 ${./scripts/generate-site.py} \
-                --summary ${integration-test}/test-summary.json \
+                --comparison ${equalization-test}/comparison.json \
                 --parity ${equalization-test}/parity-summary.json \
-                --cast test-results.cast \
+                --summary ${integration-test}/test-summary.json \
                 --output-dir $out
             '';
 
